@@ -1,0 +1,55 @@
+## Title: FilterIt
+## APIVersion: 100013
+## OptionalDependsOn: LibAddonMenu-2.0
+## SavedVariables: FilterItSavedVars
+## Version: 3.9
+## Author: Circonian
+## Description: Creates filters for different inventory/window item lists.
+
+libs\LibStub\LibStub.lua
+libs\LibFilterIt-1.0\LibFilterIt-1.0.lua
+libs\LibItemInfo-1.0\LibItemInfo-1.0.lua
+libs\LibNeed4Research\LibNeed4Research.lua
+libs\LibCustomMenu\LibCustomMenu.lua
+libs\LibLoadedAddons-1.0\LibLoadedAddons-1.0.lua
+libs/libCommonInventoryFilters/libCommonInventoryFilters.lua
+
+libs\LibAddonMenu-2.0\LibAddonMenu-2.0.lua
+libs\LibAddonMenu-2.0\controls\panel.lua
+libs\LibAddonMenu-2.0\controls\submenu.lua
+libs\LibAddonMenu-2.0\controls\button.lua
+libs\LibAddonMenu-2.0\controls\checkbox.lua
+libs\LibAddonMenu-2.0\controls\colorpicker.lua
+libs\LibAddonMenu-2.0\controls\custom.lua
+libs\LibAddonMenu-2.0\controls\description.lua
+libs\LibAddonMenu-2.0\controls\dropdown.lua
+libs\LibAddonMenu-2.0\controls\editbox.lua
+libs\LibAddonMenu-2.0\controls\header.lua
+libs\LibAddonMenu-2.0\controls\slider.lua
+libs\LibAddonMenu-2.0\controls\texture.lua
+
+FilterIt.lua
+Settings\FilterIt_Settings.lua
+Settings\Bindings.xml
+
+Cleaning\FilterIt_RestoreMarks.lua
+Cleaning\FilterIt_RegisterFilters.lua
+Cleaning\FilterIt_SetupCallbacks.lua
+Cleaning\FilterIt_HandleMarks.lua
+Cleaning\FilterIt_ContextMenu.lua
+
+
+Common\FilterIt_FilterFuncs.lua
+Common\FilterIt_Shared.lua
+Common\FilterIt_Utility.lua
+InvMenuBars\FilterIt_InventoryFilters.lua
+InvMenuBars\FilterIt_FilterMenu.xml
+InvMenuBars\FilterIt_MenuBars.lua
+Layout\FilterIt_InvLayout.lua
+Enchanting\FilterIt_EnchantingWindow.lua
+Smithing\FilterIt_SmithingCreation.lua
+Smithing\FilterIt_SmithingDeconImprov.lua
+Repair\FilterIt_RepairFilters.lua
+Protection\FilterIt_Protection.lua
+
+Cleaning\FilterIt_FilterEnabler.lua

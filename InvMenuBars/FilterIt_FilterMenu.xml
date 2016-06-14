@@ -1,0 +1,70 @@
+ <GuiXml>
+	<Controls>      
+        <Control name="FilterItMenuBarWithToolTips" inherits="ZO_MenuBarTemplate" virtual="true">
+            <OnInitialized>
+                ZO_MenuBar_OnInitialized(self)
+                local barData =
+                {
+                    buttonPadding = 0,
+                    normalSize = 40,
+                    downSize = 64,
+                    animationDuration = DEFAULT_SCENE_TRANSITION_TIME,
+                    buttonTemplate = "FilterItButtonTemplateWithToolTips",
+                }
+                ZO_MenuBar_SetData(self, barData)
+            </OnInitialized>
+        </Control>
+
+		
+        <Control name="FilterItButtonTemplateWithToolTips" inherits="ZO_MenuBarButtonTemplate1" virtual="true">
+			<Dimensions x="32" y="32" />
+            <OnMouseEnter>
+                ZO_MenuBarButtonTemplateWithTooltip_OnMouseEnter(self)
+				FilterIt.MenuButtonOnMouseOver(self)
+            </OnMouseEnter>
+
+            <OnMouseExit>
+                ZO_MenuBarButtonTemplateWithTooltip_OnMouseExit(self)
+				FilterIt.MenuButtonOnMouseExit(self)
+            </OnMouseExit>
+			
+			<OnMouseUp>
+				FilterIt.MenuButtonClicked(self, button, upInside)
+				ZO_MenuBarButtonTemplate_OnMouseUp(self, button, upInside)
+			</OnMouseUp>
+			
+			<!--
+        <Control name="VertFilterButtonTemplate" inherits="ZO_MenuBarButtonTemplate1" virtual="true">
+            <OnMouseEnter>
+                ZO_MenuBarButtonTemplateWithTooltip_OnMouseEnter(self)
+            </OnMouseEnter>
+
+            <OnMouseExit>
+                ZO_MenuBarButtonTemplateWithTooltip_OnMouseExit(self)
+            </OnMouseExit>
+			-->
+			
+			
+			
+			
+            <Controls>
+			<!--
+                <Backdrop name="$(parent)BG" level="0" inherits="ZO_DefaultBackdrop" >
+					<AnchorFill />
+				</Backdrop>
+			-->
+				<Texture name="$(parent)HighlightTexture" level="2" hidden="true" textureFile="/esoui/art/actionbar/magechamber_icespelloverlay_down.dds" excludeFromResizeToFitExtents="true" >
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="-20" offsetY="-20" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="20" offsetY="20" />
+				</Texture>
+				
+				<Texture name="$(parent)PressedTexture" level="2" hidden="true" textureFile="/esoui/art/actionbar/magechamber_firespelloverlay_down.dds" excludeFromResizeToFitExtents="true" >
+					<Anchor point="TOPLEFT" relativeTo="$(parent)" relativePoint="TOPLEFT" offsetX="-20" offsetY="-20" />
+					<Anchor point="BOTTOMRIGHT" relativeTo="$(parent)" relativePoint="BOTTOMRIGHT" offsetX="20" offsetY="20" />
+				</Texture>
+				
+            </Controls>
+        </Control>
+		
+	</Controls>
+</GuiXml>
