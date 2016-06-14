@@ -268,16 +268,16 @@ end
 local function CreateDropDownLevelFilters(_parentMenuBar, _iInventoryType)
 local tLevelFilters = {
 	[1] 	= {["Name"] = "None"},
-	[2] 	= {["Name"] = "0-1", 		["Callback"] = FilterIt.FilterByLevels_00_01, ["NumItems"] = 0},
-	[3] 	= {["Name"] = "2-10", 	["Callback"] = FilterIt.FilterByLevels_02_10, ["NumItems"] = 0},
-	[4] 	= {["Name"] = "11-20", 	["Callback"] = FilterIt.FilterByLevels_11_20, ["NumItems"] = 0},
-	[5] 	= {["Name"] = "21-30", 	["Callback"] = FilterIt.FilterByLevels_21_30, ["NumItems"] = 0},
-	[6] 	= {["Name"] = "31-40", 	["Callback"] = FilterIt.FilterByLevels_31_40, ["NumItems"] = 0},
-	[7] 	= {["Name"] = "41-50", 	["Callback"] = FilterIt.FilterByLevels_41_50, ["NumItems"] = 0},
-	[8] 	= {["Name"] = "V1-V5", 	["Callback"] = FilterIt.FilterByLevels_v01_v05, ["NumItems"] = 0},
-	[9] 	= {["Name"] = "V6-V10", 	["Callback"] = FilterIt.FilterByLevels_v06_v10, ["NumItems"] = 0},
-	[10] 	= {["Name"] = "V11-V13", 	["Callback"] = FilterIt.FilterByLevels_v11_v14, ["NumItems"] = 0},
-	[11] 	= {["Name"] = "V14+", 	["Callback"] = FilterIt.FilterByLevels_v15_v50, ["NumItems"] = 0},
+	[2] 	= {["Name"] = "0-1",            ["Callback"] = FilterIt.FilterByLevels_00_01, ["NumItems"] = 0},
+	[3] 	= {["Name"] = "2-10",           ["Callback"] = FilterIt.FilterByLevels_02_10, ["NumItems"] = 0},
+	[4] 	= {["Name"] = "11-20",          ["Callback"] = FilterIt.FilterByLevels_11_20, ["NumItems"] = 0},
+	[5] 	= {["Name"] = "21-30",          ["Callback"] = FilterIt.FilterByLevels_21_30, ["NumItems"] = 0},
+	[6] 	= {["Name"] = "31-40",          ["Callback"] = FilterIt.FilterByLevels_31_40, ["NumItems"] = 0},
+	[7] 	= {["Name"] = "41-50",          ["Callback"] = FilterIt.FilterByLevels_41_50, ["NumItems"] = 0},
+	[8] 	= {["Name"] = "CP 10-50",       ["Callback"] = FilterIt.FilterByLevels_cp10_cp50, ["NumItems"] = 0},
+	[9] 	= {["Name"] = "CP 60-100",      ["Callback"] = FilterIt.FilterByLevels_cp60_cp100, ["NumItems"] = 0},
+	[10] 	= {["Name"] = "CP 110-130",     ["Callback"] = FilterIt.FilterByLevels_cp110_cp130, ["NumItems"] = 0},
+	[11] 	= {["Name"] = "CP 140-160", 	["Callback"] = FilterIt.FilterByLevels_cp140_cp160, ["NumItems"] = 0},
 }
 	-- Changed because I removed SetResizeToFitDescendents(false) from the (games) parent menu bar
 	-- Which caused anchor problems, so this can no longer be a child of the parent menu bar
@@ -291,7 +291,7 @@ local tLevelFilters = {
 	--local zoInventory = _parentMenuBar:GetParent()
 	--local ddcFilters = WINDOW_MANAGER:CreateControlFromVirtual(_parentMenuBar:GetName().."ddLevelFilters", zoInventory, "ZO_ComboBox")
 	
-	ddcFilters:SetDimensions(125, 30)
+	ddcFilters:SetDimensions(140, 30)
 	ddcFilters:ClearAnchors()
 	--ddcFilters:SetAnchor(TOPRIGHT, _parentMenuBar, BOTTOMLEFT, -50, 20)
 	ddcFilters:SetAnchor(TOPRIGHT, _parentMenuBar, BOTTOMRIGHT, -380, 20)

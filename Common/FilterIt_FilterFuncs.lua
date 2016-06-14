@@ -13,21 +13,21 @@ end
 ---------------------------
 -- Level Filters --
 ---------------------------
-local function FilterByLevels(_tSlot, _bVetRank, _iMinLevel, _iMaxLevel)
+local function FilterByLevels(_tSlot, _bChampionPoints, _iMinLevel, _iMaxLevel)
 	if not IsSlotOccupied(_tSlot) then return false end
 	local iBagId 		= _tSlot.bagId
 	local iSlotId 		= _tSlot.slotIndex
 	local iReqLevelRank = 0
 	local iReqLevel 	= GetItemRequiredLevel(iBagId, iSlotId)
-	local iReqVetRank 	= GetItemRequiredVeteranRank(iBagId, iSlotId)
+	local iReqChampionPoints 	= GetItemRequiredChampionPoints(iBagId, iSlotId)
 	
-	if _bVetRank then
-		-- handles the overlap at level 50, all vet items have reqLevel 50
-		if iReqVetRank < 1 then return false end
-		iReqLevelRank = iReqVetRank
+	if _bChampionPoints then
+		-- handles the overlap at level 50, all champion items have reqLevel 50
+		if iReqChampionPoints < 1 then return false end
+		iReqLevelRank = iReqChampionPoints
 	else
-		-- handles the overlap at level 50, all vet items have reqLevel 50
-		if iReqVetRank > 0 then return false end
+		-- handles the overlap at level 50, all champion items have reqLevel 50
+		if iReqChampionPoints > 0 then return false end
 		iReqLevelRank = iReqLevel
 	end
 	
@@ -54,17 +54,17 @@ end
 function FilterIt.FilterByLevels_41_50(_tSlot)
 	return FilterByLevels(_tSlot, false, 41, 50)
 end
-function FilterIt.FilterByLevels_v01_v05(_tSlot)
-	return FilterByLevels(_tSlot, true, 01, 05)
+function FilterIt.FilterByLevels_cp10_cp50(_tSlot)
+	return FilterByLevels(_tSlot, true, 10, 50)
 end
-function FilterIt.FilterByLevels_v06_v10(_tSlot)
-	return FilterByLevels(_tSlot, true, 6, 10)
+function FilterIt.FilterByLevels_cp60_cp100(_tSlot)
+	return FilterByLevels(_tSlot, true, 60, 100)
 end
-function FilterIt.FilterByLevels_v11_v14(_tSlot)
-	return FilterByLevels(_tSlot, true, 11, 13)
+function FilterIt.FilterByLevels_cp110_cp130(_tSlot)
+	return FilterByLevels(_tSlot, true, 110, 130)
 end
-function FilterIt.FilterByLevels_v15_v50(_tSlot)
-	return FilterByLevels(_tSlot, true, 14, 50)
+function FilterIt.FilterByLevels_cp140_cp160(_tSlot)
+	return FilterByLevels(_tSlot, true, 140, 160)
 end
 ---------------------------
 -- Show All Marks Filter Check --
@@ -470,7 +470,7 @@ end
 function FilterIt.FilterAlchemy(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
-	return _tSlot.itemType == ITEMTYPE_ALCHEMY_BASE or _tSlot.itemType == ITEMTYPE_REAGENT
+	return _tSlot.itemType == ITEMTYPE_POTION_BASE or _tSlot.itemType == ITEMTYPE_POISON_BASE or _tSlot.itemType == ITEMTYPE_REAGENT
 end
 
 local tWoodworkingItemTypes = {

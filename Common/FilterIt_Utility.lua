@@ -19,8 +19,8 @@ function FilterIt.GetSlotData(_iBagId, _iSlotId)
 	
 	-- <= 3 instead of 4 prevents marking items in the guild bank
 	-- Is that what I want?
-    if (type(_iBagId) == "number" and _iBagId >= 0 and _iBagId <= 3) then
-        if (type(_iSlotId) == "number" and _iSlotId >= 0 and _iSlotId <= GetBagSize(_iBagId) - 1) then
+    if (type(_iBagId) == "number" and _iBagId >= 0 and (_iBagId <= 3 or _iBagId==5)) then
+        if (type(_iSlotId) == "number" and _iSlotId >= 0 and (_iBagId==5 or _iSlotId <= GetBagSize(_iBagId) - 1)) then
             local _, stackCount = GetItemInfo(_iBagId, _iSlotId)
             bIsBagSlotValid = (stackCount > 0)
         end
