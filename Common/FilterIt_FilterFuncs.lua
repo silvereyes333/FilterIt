@@ -307,6 +307,11 @@ function FilterIt.FilterPotions(_tSlot)
 	
 	return (_tSlot.itemType == ITEMTYPE_POTION)
 end
+function FilterIt.FilterPoisons(_tSlot)
+	if not IsSlotOccupied(_tSlot) then return false end
+	
+	return (_tSlot.itemType == ITEMTYPE_POISON)
+end
 function FilterIt.FilterRecipes(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	

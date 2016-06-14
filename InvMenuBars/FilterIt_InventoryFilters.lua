@@ -1,4 +1,3 @@
-
 -- Main filters for inventories: Backpack, bank, guildBank (all layouts of backpack)
 
 FilterIt.tabFilters = {}
@@ -414,8 +413,19 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		filterName 		= "FilterIt_Filter_Potions",
 		filterFunc 		= FilterIt.FilterPotions,
 	},
--- ITEMTYPE_RECIPE --
+-- ITEMTYPE_POISON --
 	[6] = {
+		disabled 		= "EsoUI/Art/icons/crafting_poison_002_green_002.dds",
+		normal 			= "EsoUI/Art/icons/crafting_poison_002_green_002.dds",
+		pressed 		= "EsoUI/Art/icons/crafting_poison_002_green_002.dds",
+		highlight		= "EsoUI/Art/icons/crafting_poison_002_green_002.dds",
+		tooltipText 	= SI_ITEMTYPE30,
+		descriptor		= 5,
+		filterName 		= "FilterIt_Filter_Poisons",
+		filterFunc 		= FilterIt.FilterPoisons,
+	},
+-- ITEMTYPE_RECIPE --
+	[7] = {
 		disabled 		= "EsoUI/Art/icons/quest_scroll_001.dds",
 		normal 			= "EsoUI/Art/icons/quest_scroll_001.dds",
 		pressed 		= "EsoUI/Art/icons/quest_scroll_001.dds",
@@ -426,7 +436,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		filterFunc 		= FilterIt.FilterRecipes,
 	},
 -- ITEMTYPE_RACIAL_STYLE_MOTIF --
-	[7] = {
+	[8] = {
 		disabled 		= "EsoUI/Art/Icons/quest_book_001.dds",
 		normal 			= "EsoUI/Art/Icons/quest_book_001.dds",
 		pressed 		= "EsoUI/Art/Icons/quest_book_001.dds",
@@ -437,7 +447,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		filterFunc 		= FilterIt.FilterMotifs,
 	},
 -- ITEMTYPE_TROPHY --
-	[8] = {
+	[9] = {
 		disabled 		= "EsoUI/Art/icons/quest_symbol_001.dds",
 		normal 			= "EsoUI/Art/icons/quest_symbol_001.dds",
 		pressed 		= "EsoUI/Art/icons/quest_symbol_001.dds",
@@ -448,7 +458,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		filterFunc 		= FilterIt.FilterTrophiesConsumable,
 	},
 -- ITEMTYPE_CONTAINER --
-	[9] = {
+	[10] = {
 		disabled 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
 		normal 			= "EsoUI/Art/icons/item_generic_coinbag.dds",
 		pressed 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
@@ -460,7 +470,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		filterFunc 		= FilterIt.FilterContainersConsumable,
 	},
 -- ITEMTYPE_TOOL  (under consumables, this means repair kits) --
-	[10] = {
+	[11] = {
 		disabled 		= "EsoUI/Art/icons/quest_crate_001.dds",
 		normal 			= "EsoUI/Art/icons/quest_crate_001.dds",
 		pressed 		= "EsoUI/Art/icons/quest_crate_001.dds",
@@ -471,7 +481,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		filterFunc 		= FilterIt.FilterRepairKits,
 	},
 -- ITEMTYPE_TOOL  (under consumables, this means repair kits) --
-	[11] = {
+	[12] = {
 		disabled 		= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
 		normal 			= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
 		pressed 		= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
