@@ -329,7 +329,7 @@ function FilterIt.FilterTrophiesConsumable(_tSlot)
 	-- inv btn filterType itself, but this is necessary for the FilterIt.SetFilterActivation(..)
 	-- to work and red out buttons that have no filtered items under them due to duplicate trophy filters
 	local bIsItemConsumable = FilterIt.FilterConsumables(_tSlot)
-	return (bIsItemConsumable and (_tSlot.itemType == ITEMTYPE_TROPHY))
+	return (bIsItemConsumable and (_tSlot.itemType == ITEMTYPE_TROPHY or _tSlot.itemType == ITEMTYPE_CROWN_ITEM or _tSlot.itemType == ITEMTYPE_TREASURE))
 end
 function FilterIt.FilterContainersConsumable(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
@@ -347,7 +347,7 @@ function FilterIt.FilterRepairKits(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	local itemType = _tSlot.itemType
 	
-	return (itemType == ITEMTYPE_TOOL) or (itemType == ITEMTYPE_AVA_REPAIR)
+	return (itemType == ITEMTYPE_TOOL) or (itemType == ITEMTYPE_AVA_REPAIR) or (itemType == ITEMTYPE_CROWN_REPAIR)
 end
 function FilterIt.FilterFish(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end

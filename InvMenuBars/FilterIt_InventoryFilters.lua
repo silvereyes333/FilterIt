@@ -32,6 +32,8 @@ ZO_CreateStringId("FILTERIT_2HAXE", 		GetString(SI_EQUIPTYPE6).." "..GetString(S
 ZO_CreateStringId("FILTERIT_2HHAMMER", 		GetString(SI_EQUIPTYPE6).." "..GetString(SI_WEAPONTYPE2))
 ZO_CreateStringId("FILTERIT_2HSWORD", 		GetString(SI_EQUIPTYPE6).." "..GetString(SI_WEAPONTYPE3))
 ZO_CreateStringId("FILTERIT_JEWELRY", "Jewelry") 
+ZO_CreateStringId("FILTERIT_UTILITY", "Utility") 
+ZO_CreateStringId("FILTERIT_TREASURE", 		GetString(SI_ITEMTYPE5).." / "..GetString(SI_ITEMTYPE56))
 
 -- Crafting --
 ZO_CreateStringId("FILTERIT_BSMATERIALS", 			sBlacksmithing.." "..GetString(SI_ITEMFILTERTYPE4))
@@ -420,7 +422,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		pressed 		= "EsoUI/Art/icons/crafting_poison_002_green_002.dds",
 		highlight		= "EsoUI/Art/icons/crafting_poison_002_green_002.dds",
 		tooltipText 	= SI_ITEMTYPE30,
-		descriptor		= 5,
+		descriptor		= 6,
 		filterName 		= "FilterIt_Filter_Poisons",
 		filterFunc 		= FilterIt.FilterPoisons,
 	},
@@ -431,7 +433,7 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		pressed 		= "EsoUI/Art/icons/quest_scroll_001.dds",
 		highlight		= "EsoUI/Art/icons/quest_scroll_001.dds",
 		tooltipText 	= SI_ITEMTYPE29,
-		descriptor		= 6,
+		descriptor		= 7,
 		filterName 		= "FilterIt_Filter_Recipes",
 		filterFunc 		= FilterIt.FilterRecipes,
 	},
@@ -442,29 +444,29 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		pressed 		= "EsoUI/Art/Icons/quest_book_001.dds",
 		highlight 		= "EsoUI/Art/Icons/quest_book_001.dds",
 		tooltipText 	= SI_ITEMTYPE8,
-		descriptor		= 7,
+		descriptor		= 8,
 		filterName 		= "FilterIt_Filter_Motifs",
 		filterFunc 		= FilterIt.FilterMotifs,
 	},
 -- ITEMTYPE_TROPHY --
 	[9] = {
-		disabled 		= "EsoUI/Art/icons/quest_symbol_001.dds",
-		normal 			= "EsoUI/Art/icons/quest_symbol_001.dds",
-		pressed 		= "EsoUI/Art/icons/quest_symbol_001.dds",
-		highlight 		= "EsoUI/Art/icons/quest_symbol_001.dds",
-		tooltipText 	= SI_ITEMTYPE5,
-		descriptor		= 8,
+		disabled 		= "EsoUI/Art/icons/token_appearancechange.dds",
+		normal 			= "EsoUI/Art/icons/token_appearancechange.dds",
+		pressed 		= "EsoUI/Art/icons/token_appearancechange.dds",
+		highlight 		= "EsoUI/Art/icons/token_appearancechange.dds",
+		tooltipText 	= FILTERIT_UTILITY,
+		descriptor		= 9,
 		filterName 		= "FilterIt_Filter_Trophies_Consumable",
 		filterFunc 		= FilterIt.FilterTrophiesConsumable,
 	},
 -- ITEMTYPE_CONTAINER --
 	[10] = {
-		disabled 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
-		normal 			= "EsoUI/Art/icons/item_generic_coinbag.dds",
-		pressed 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
-		highlight 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
+		disabled 		= "EsoUI/Art/icons/quest_container_001.dds",
+		normal 			= "EsoUI/Art/icons/quest_container_001.dds",
+		pressed 		= "EsoUI/Art/icons/quest_container_001.dds",
+		highlight 		= "EsoUI/Art/icons/quest_container_001.dds",
 		tooltipText 	= SI_ITEMTYPE18,
-		descriptor		= 9,
+		descriptor		= 10,
 		--filterName 		= "FilterIt_Filter_Containers",
 		filterName 		= "FilterIt_Filter_ContainersConsumable",
 		filterFunc 		= FilterIt.FilterContainersConsumable,
@@ -476,18 +478,18 @@ FilterIt.tabFilters[ITEMFILTERTYPE_CONSUMABLE] = {
 		pressed 		= "EsoUI/Art/icons/quest_crate_001.dds",
 		highlight 		= "EsoUI/Art/icons/quest_crate_001.dds",
 		tooltipText 	= FILTERIT_SHOW_REPAIR_KITS,
-		descriptor		= 10,
+		descriptor		= 11,
 		filterName 		= "FilterIt_Filter_Repair_Kits",
 		filterFunc 		= FilterIt.FilterRepairKits,
 	},
--- ITEMTYPE_TOOL  (under consumables, this means repair kits) --
+-- Fish --
 	[12] = {
 		disabled 		= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
 		normal 			= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
 		pressed 		= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
 		highlight 		= "EsoUI/Art/icons/crafting_fishing_merringar.dds",
 		tooltipText 	= SI_ITEMTYPE54,
-		descriptor		= 11,
+		descriptor		= 12,
 		filterName 		= "FilterIt_Filter_Fish",
 		filterFunc 		= FilterIt.FilterFish,
 	},
@@ -739,21 +741,21 @@ FilterIt.tabFilters[ITEMFILTERTYPE_MISCELLANEOUS] = {
 	},
 -- ITEMTYPE_TROPHY --
 	[10] = {
-		disabled 		= "EsoUI/Art/icons/quest_symbol_001.dds",
-		normal 			= "EsoUI/Art/icons/quest_symbol_001.dds",
-		pressed 		= "EsoUI/Art/icons/quest_symbol_001.dds",
-		highlight 		= "EsoUI/Art/icons/quest_symbol_001.dds",
-		tooltipText 	= SI_ITEMTYPE5,
+		disabled 		= "EsoUI/Art/icons/justice_stolen_key_002.dds",
+		normal 			= "EsoUI/Art/icons/justice_stolen_key_002.dds",
+		pressed 		= "EsoUI/Art/icons/justice_stolen_key_002.dds",
+		highlight 		= "EsoUI/Art/icons/justice_stolen_key_002.dds",
+		tooltipText 	= FILTERIT_TREASURE,
 		descriptor		= 10,
 		filterName 		= "FilterIt_Filter_Trophies_Misc",
 		filterFunc 		= FilterIt.FilterTrophiesMisc,
 	},
 -- ITEMTYPE_CONTAINER --
 	[11] = {
-		disabled 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
-		normal 			= "EsoUI/Art/icons/item_generic_coinbag.dds",
-		pressed 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
-		highlight 		= "EsoUI/Art/icons/item_generic_coinbag.dds",
+		disabled 		= "EsoUI/Art/icons/quest_container_001.dds",
+		normal 			= "EsoUI/Art/icons/quest_container_001.dds",
+		pressed 		= "EsoUI/Art/icons/quest_container_001.dds",
+		highlight 		= "EsoUI/Art/icons/quest_container_001.dds",
 		tooltipText 	= SI_ITEMTYPE18,
 		descriptor		= 11,
 		--filterName 		= "FilterIt_Filter_Containers",
