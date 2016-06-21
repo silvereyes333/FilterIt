@@ -2,8 +2,8 @@
 ## APIVersion: 100015
 ## OptionalDependsOn: LibAddonMenu-2.0
 ## SavedVariables: FilterItSavedVars
-## Version: 3.9
-## Author: Circonian
+## Version: 4.0
+## Author: |cEFEBBECirconian|r & |c99CCEFsilvereyes|r
 ## Description: Creates filters for different inventory/window item lists.
 
 libs\LibStub\LibStub.lua
