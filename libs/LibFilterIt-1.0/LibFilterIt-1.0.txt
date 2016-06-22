@@ -1,4 +1,4 @@
-## APIVersion: 100009
+## APIVersion: 100015
 ## Title: LibFilterIt-1.0
 ## Version: 1.0 r2
 ## Author: Circonian

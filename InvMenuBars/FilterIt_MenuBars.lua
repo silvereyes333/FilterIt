@@ -51,6 +51,7 @@ local function InvTabSwitch(_tButtonData)
 	gameMenuBar.m_object.m_currentSubMenuBar = newMenuBar
 	
 	local iInventory = _tButtonData.inventoryType
+	local currentInventory = FilterIt.GetInventoryInstance(iInventory)
 	local currentInvFilter
 	
 	-- and thats why we check that newMenuBar exists here it could possibly be nil.
@@ -66,6 +67,16 @@ local function InvTabSwitch(_tButtonData)
 			newfilterType = FilterIt.GetInventoryFilterFromInteraction()
 		end
 		newMenuBar.currentFilter[iInventory].filterType = newfilterType
+		
+		local ParentMenuTabsBar 		= FilterIt.GetParentMenuTabsForInv(iInventory)
+		local ddLevelFilters 			= ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
+		if ddLevelFilters then
+			if newMenuBar.m_object.HideLevelFilters then
+				ddLevelFilters:SetHidden(true)
+			else
+				ddLevelFilters:SetHidden(false)
+			end
+		end
 		--FilterIt.SetFilterActivation(newMenuBar)
 		local clickedButton = newMenuBar.m_object.m_clickedButton
 		if (not clickedButton or (clickedButton and clickedButton:GetState() == BSTATE_DISABLED)) then
@@ -76,23 +87,28 @@ local function InvTabSwitch(_tButtonData)
 			newMenuBar.currentFilter[iInventory].filterFunc = nil
 			local cAllButton = newMenuBar.m_object.m_buttons[1][1]
 			FilterIt.MenuButtonClicked(cAllButton, nil,  true)
-			newMenuBar.m_object:SelectDescriptor(1)
 		end
 		FilterIt.RegisterNewFilterBarFilter(newMenuBar)
 		
-		PLAYER_INVENTORY.inventories[iInventory].FilterItCurrentSubFilterBar = newMenuBar
+		currentInventory.FilterItCurrentSubFilterBar = newMenuBar
 		currentInvFilter = newMenuBar.m_object.OwningBtnFilterType
+		
+		if (not clickedButton or (clickedButton and clickedButton:GetState() == BSTATE_DISABLED)) then
+			newMenuBar.m_object:SelectDescriptor(1)
+		end
 	else
-		PLAYER_INVENTORY.inventories[iInventory].FilterItCurrentSubFilterBar = nil
+		currentInventory.FilterItCurrentSubFilterBar = nil
 	end
 	-- Below line change to prevent search box from showing up when on the ITEMFILTERTYPE_QUEST tab
 	--if newMenuBar and currentInvFilter ~= ITEMFILTERTYPE_ALL then
-	if currentInvFilter ~= ITEMFILTERTYPE_ALL then
-		PLAYER_INVENTORY.inventories[iInventory].searchBox:SetHidden(true)
-		PLAYER_INVENTORY.inventories[iInventory].searchBox:Clear()
-	else
-		-- no submenu or Show ALL filter tab so show the search box.
-		PLAYER_INVENTORY.inventories[iInventory].searchBox:SetHidden(false)
+	if currentInventory.searchBox then
+		if currentInvFilter ~= ITEMFILTERTYPE_ALL then
+			currentInventory.searchBox:SetHidden(true)
+			currentInventory.searchBox:Clear()
+		else
+			-- no submenu or Show ALL filter tab so show the search box.
+			currentInventory.searchBox:SetHidden(false)
+		end
 	end
 end
 
@@ -103,6 +119,8 @@ end
 ---------------------------------------------------------------------------------------
 local function FilterItTabSwitch(tabData)
 	local menuBar = tabData.menuBar
+	-- Note the Inventory ID that the menu belongs to is stored in the menuBar
+	local iInventory 	= menuBar.inventoryType
 	--*************************************************************************--
 	-- Its parent gives me the games menuBar, like ZO_PlayerInventoryTabs
 	-- local gameMenuBar = menuBar:GetParent()
@@ -112,7 +130,12 @@ local function FilterItTabSwitch(tabData)
 	-- Because of changes parentMenuBar is no longer the actual parent, the parent is now the inventory like ZO_PlayerInventory
 	-- But I'm going to keep calling it parent because thats how I remember it being coded & I don't want to change 
 	-- all of the code.
-	local gameMenuBar = menuBar.parentMenuBar
+	local gameMenuBar
+	if iInventory == FILTERIT_QUICKSLOT then
+	    gameMenuBar = ZO_QuickSlotTabs
+	else
+		gameMenuBar = menuBar.parentMenuBar
+	end
 	
 	-- Grab the last menuBar used in this inventory so we can grab its filter to unregister it, it was stored in the InvTabs menuBar
 	local lastMenuBar = gameMenuBar.m_object.m_currentSubMenuBar
@@ -120,8 +143,6 @@ local function FilterItTabSwitch(tabData)
 	FilterIt.UnregisterFilterBarFilter(lastMenuBar)
 	
 	-- get new menu bar data from our new menuBar (came from tabData)
-	-- Note the Inventory ID that the menu belongs to is stored in the menuBar
-	local iInventory 	= menuBar.inventoryType
 	-- for backpack, bank, & guildback the inventory id matches the filter ID so this is ok
 	local newfilterType = iInventory
 	
@@ -136,18 +157,23 @@ local function FilterItTabSwitch(tabData)
 	menuBar.currentFilter[iInventory].filterFunc = tabData.filterFunc
 	
 	FilterIt.RegisterNewFilterBarFilter(menuBar)
-    local activeTabControl = PLAYER_INVENTORY.inventories[iInventory].activeTab
+    local activeTabControl = FilterIt.GetInventoryActiveTabControl(iInventory)
     if(activeTabControl) then
         activeTabControl:SetText(zo_strformat("<<t:1>>", GetString(tabData.tooltip)))
     end
 	-- Update the Inventory
-	PLAYER_INVENTORY:UpdateList(iInventory)
-	PLAYER_INVENTORY:UpdateFreeSlots(iInventory)
+	if iInventory == FILTERIT_QUICKSLOT then
+		QUICKSLOT_WINDOW:UpdateList()
+		QUICKSLOT_WINDOW:UpdateFreeSlots()
+	else
+		PLAYER_INVENTORY:UpdateList(iInventory)
+		PLAYER_INVENTORY:UpdateFreeSlots(iInventory)
+	end
 end
 
 
 --------------------------------------------------------------------------------------
--- Create Tab Filter Data: This is only used for backpack, bank, & guild bank. Crafting filter tab data is done elsewhere, some have special requirements that prevent me from using a single create tab filter data function  --
+-- Create Tab Filter Data: This is only used for backpack, bank, guild bank, and quickslots. Crafting filter tab data is done elsewhere, some have special requirements that prevent me from using a single create tab filter data function  --
 --------------------------------------------------------------------------------------
 local function CreateNewTabFilterData(_cButton, _tTabFilter, _menuBar)
     local tabData = 
@@ -182,7 +208,7 @@ local function CreateButtons(_menuBar, _cButton, _tTabFilters)
 end
 
 -- Creates the subMenuBars for custom filters. _cButton is the button that will display the subMenu when clicked. 
-local function CreateMenuBar(_cButton, _iInventory)
+local function CreateMenuBar(_cButton, _iInventory, _bHideLevelFilters)
 	--local parentControl = ZO_PlayerInventory
 	-- THIS IS THE MENU BARS PARENT
 	local parentControl = FilterIt.GetParentMenuTabsForInv(_iInventory)
@@ -206,7 +232,11 @@ local function CreateMenuBar(_cButton, _iInventory)
 	-- Changed because if the menu Bar size changes it messes up my anchors since
 	-- the games menu bar is anchored on the right
 	--menuBar:SetAnchor(TOPLEFT, parentControl, BOTTOMLEFT, -20, 20)
-	menuBar:SetAnchor(TOPLEFT, parentControl, BOTTOMRIGHT, -370, 20)
+	local iLeftAnchor = -370
+	if _bHideLevelFilters then
+		iLeftAnchor = iLeftAnchor - 40
+	end
+	menuBar:SetAnchor(TOPLEFT, parentControl, BOTTOMRIGHT, iLeftAnchor, 20)
 	menuBar:SetHidden(true)
 	-- Store the inventory type in the menu bar for easy access later.
 	menuBar.inventoryType = _iInventory
@@ -214,6 +244,7 @@ local function CreateMenuBar(_cButton, _iInventory)
 	menuBar.m_object.m_buttonPadding = 0	-- XOffset for Anchor (there is no offsetY allowed without hooking) --	
 	menuBar.m_object.m_downSize 	 = 40	-- size of icon when hoovered over --
 	menuBar.m_object.m_normalSize 	 = 24	-- normal size of icon --
+    menuBar.m_object.HideLevelFilters = _bHideLevelFilters
 	
 	-- MenuBar holds the filter information for each inventory type. So when we switch back to any given SubMenu bar for any given inventory we can restore the last used filter rather than resetting to the ALL button.
 	menuBar.currentFilter = {
@@ -245,10 +276,11 @@ local function MakeMenuBar(_cButton)
 	
 	local menuBar = nil
 	if type(iGameFilterType) == "number" and tGameFilterTypes[iGameFilterType] then
-		menuBar = CreateMenuBar(_cButton, iInventory)
+		local filters = FilterIt.tabFilters[iGameFilterType]
+		menuBar = CreateMenuBar(_cButton, iInventory, filters.HideLevelFilters)
 		--menuBar.m_object.OwningBtn = _cButton
 		menuBar.m_object.OwningBtnFilterType = _cButton.m_object.m_buttonData.filterType
-		CreateButtons(menuBar, _cButton, FilterIt.tabFilters[iGameFilterType])
+		CreateButtons(menuBar, _cButton, filters)
 	end
 	-- Game always starts at the ALL tab, so initialize the starting
 	-- SubMenuBar, save it in the proper place so we know the current bar
@@ -259,6 +291,46 @@ local function MakeMenuBar(_cButton)
 		-- This MUST be done because bank & guild bank do NOT Fire a 
 		-- Callback the first time they are opened like the backpack does
 		menuBar:SetHidden(false)
+	end
+	
+	return menuBar
+end
+-- _cButton is the button that, when clicked, will display the menu bar we are creating. We need it passed in so we can store a reference to it in our menu bar for later use.
+local function GetQuickSlotMenu(_cButton)
+	local tGameFilterTypes 	= {
+		[ITEMFILTERTYPE_COLLECTIBLE] 	= true,
+		[ITEMFILTERTYPE_QUICKSLOT] 		= true,
+		[ITEMFILTERTYPE_ALL] 			= true,
+	}
+	local tButtonData = _cButton.m_object.m_buttonData
+	local iGameFilterType = tButtonData.descriptor
+	local iInventory = FILTERIT_QUICKSLOT -- custom flag for quickslot inventory type
+	
+	local menuBar = nil
+	if type(iGameFilterType) == "number" and tGameFilterTypes[iGameFilterType] then
+		local filters = FilterIt.quickSlotFilters[iGameFilterType]
+		menuBar = CreateMenuBar(_cButton, iInventory, filters.HideLevelFilters)
+		--menuBar.m_object.OwningBtn = _cButton
+		menuBar.m_object.OwningBtnFilterType = iGameFilterType
+		if filters.HideLevelFilters then
+		
+		end
+		CreateButtons(menuBar, _cButton, filters)
+	end
+	-- Game always starts at the SLOTTABLE ITEMS tab, so initialize the starting
+	-- SubMenuBar, save it in the proper place so we know the current bar
+	if iGameFilterType == ITEMFILTERTYPE_QUICKSLOT then
+		local parentControl = FilterIt.GetParentMenuTabsForInv(iInventory)
+		ZO_QuickSlotList.FilterItCurrentSubFilterBar = menuBar
+		parentControl.m_object.m_currentSubMenuBar = menuBar
+		-- This MUST be done because quickslot does NOT fire a 
+		-- callback the first time they are opened like the backpack does
+		menuBar:SetHidden(false)
+		
+		-- Select the all tab by default
+		local cAllButton = menuBar.m_object.m_buttons[1][1]
+		FilterIt.MenuButtonClicked(cAllButton, nil,  true)
+		menuBar.m_object:SelectDescriptor(1)
 	end
 	
 	return menuBar
@@ -284,6 +356,8 @@ local tLevelFilters = {
 	-- or I made a mistake, changing it back seems to work now.
 	
 	local ddcFilters = WINDOW_MANAGER:CreateControlFromVirtual(_parentMenuBar:GetName().."ddLevelFilters", _parentMenuBar, "ZO_ComboBox")
+	local currentInventory = FilterIt.GetInventoryInstance(_iInventoryType)
+	
 	--***********************************************************
 	ddcFilters:SetExcludeFromResizeToFitExtents(true)
 	--***********************************************************
@@ -312,7 +386,7 @@ local tLevelFilters = {
 	--comboBox.m_FilterIt_CurrentFilter = nil
 	--comboBox.m_FilterIt_CurrentFilterFunc = nil
 		
-	PLAYER_INVENTORY.inventories[_iInventoryType].FilterIt_DDLevelFilter = ddcFilters
+	currentInventory.FilterIt_DDLevelFilter = ddcFilters
 	
 	FilterIt.UpdateDropDownLevelFilterEntries(_parentMenuBar, _iInventoryType)
 end
@@ -388,10 +462,34 @@ local function HookGuildBankButtons()
 	end
 end
 
+local function HookQuickSlotButtons()
+	local tButtons = ZO_QuickSlotTabs.m_object.m_buttons
+	CreateDropDownLevelFilters(ZO_QuickSlotTabs, FILTERIT_QUICKSLOT)
+	for k,v in pairs(tButtons) do
+		local tButtonData = v[1].m_object.m_buttonData
+		tButtonData.control = v[1]
+		tButtonData.inventoryType = FILTERIT_QUICKSLOT
+		local hCallback = tButtonData.callback
+		
+		-- Make the SubMenu bar for this button & store it in tButtonData
+		-- Since I have to do this loop anyhow to set a callback for the buttons I might as well
+		-- create the menu bars for each button here too
+		local menuBar = GetQuickSlotMenu(v[1])
+		tButtonData.FilterIt_SubMenu = menuBar
+		
+		tButtonData.callback = function(...)
+				InvTabSwitch(...)
+				hCallback(...)
+				QUICKSLOT_WINDOW:UpdateFreeSlots()
+		end
+	end
+end
+
 function FilterIt.HookInvButtons()
 	HookInvButtons()
 	HookBankButtons()
 	HookGuildBankButtons()
+	HookQuickSlotButtons()
 end
 
 

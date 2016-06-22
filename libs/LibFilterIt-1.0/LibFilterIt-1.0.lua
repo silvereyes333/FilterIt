@@ -4,7 +4,7 @@
 --*****************************--
 
 --Register with LibStub
-local MAJOR, MINOR = "LibFilterIt-1.0", 8
+local MAJOR, MINOR = "LibFilterIt-1.0", 9
 local lfi, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
 if not lfi then return end	--the same or newer version of this lib is already loaded into memory 
 
@@ -40,6 +40,7 @@ FILTERIT_IMPROVEMENT		= 13
 FILTERIT_REFINEMENT			= 14
 FILTERIT_RESEARCH 			= 15
 FILTERIT_ALL				= 16		-- THIS DOESN'T DO ANYTHING, Used in FilterIt code only
+FILTERIT_QUICKSLOT          = 17
 
 --------------------------------------------------
 -- Holds the registered callback filters 		--
@@ -62,6 +63,8 @@ local tFilterItFilters = {
 	[FILTERIT_DECONSTRUCTION] = {},
 	[FILTERIT_REFINEMENT] = {},
 	[FILTERIT_RESEARCH] = {},
+	
+	[FILTERIT_QUICKSLOT] = {},
 }
 GLOBAL_ACTIVE_FILTERS = tFilterItFilters
 --*******************************************************--
@@ -359,6 +362,31 @@ function ZO_SmithingResearchSelect:SetupDialog(craftingType, researchLineIndex, 
     listDialog:AddCustomControl(self.control, LIST_DIALOG_CUSTOM_CONTROL_LOCATION_BOTTOM)
 end
 	
+	
+
+--*******************************************************--
+--****************   Quick Slots   **********************--
+--*******************************************************--
+function ZO_QuickslotManager:ShouldAddItemToList(itemData)
+
+    for i = 1, #itemData.filterData do
+        if(itemData.filterData[i] == ITEMFILTERTYPE_QUICKSLOT) then
+            return RunFilterFromBagIdSlotId(itemData.bagId, itemData.slotIndex, FILTERIT_QUICKSLOT)
+        end
+    end
+    
+	return false
+end
+
+local DATA_TYPE_COLLECTIBLE_ITEM = 2
+function ZO_QuickslotManager:AppendCollectiblesData(scrollData)
+    local data = COLLECTIONS_INVENTORY_SINGLETON:GetQuickslotData()
+    for i = 1, #data do
+        if CheckFilters(data[i], FILTERIT_QUICKSLOT) then
+			table.insert(scrollData, ZO_ScrollList_CreateDataEntry(DATA_TYPE_COLLECTIBLE_ITEM, data[i]))
+		end
+    end
+end
 	
 	
 

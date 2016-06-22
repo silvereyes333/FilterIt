@@ -103,6 +103,8 @@ function FilterIt.GetParentMenuTabsForInv(_iInventory)
 		parentControl = ZO_PlayerBankTabs
 	elseif _iInventory == INVENTORY_GUILD_BANK then
 		parentControl = ZO_GuildBankTabs
+	elseif _iInventory == FILTERIT_QUICKSLOT then
+		parentControl = ZO_QuickSlotTabs
 	end
 	return parentControl
 end
@@ -129,7 +131,29 @@ function FilterIt.GetInventoryFilterFromInteraction()
 	if TRADE_WINDOW:IsTrading() then
 		return FILTERIT_TRADE
 	end
+	-- Quickslots don't have an interaction type either, so check the quickslot window state
+	if QUICKSLOT_WINDOW.quickSlotState then
+		return FILTERIT_QUICKSLOT
+	end
 	return FILTERIT_BACKPACK
+end
+
+--[[ Used to get the active tab for the given inventory type
+--]]
+function FilterIt.GetInventoryActiveTabControl(_iInventory)
+	if _iInventory == FILTERIT_QUICKSLOT then
+		return ZO_QuickSlotTabsActive
+	end
+	return PLAYER_INVENTORY.inventories[_iInventory].activeTab
+end
+
+--[[ Used to get the given inventory object
+--]]
+function FilterIt.GetInventoryInstance(_iInventory)
+	if _iInventory == FILTERIT_QUICKSLOT then
+		return ZO_QuickSlotList
+	end
+	return PLAYER_INVENTORY.inventories[_iInventory]
 end
 
 
@@ -231,6 +255,22 @@ function ZO_InventoryManager:UpdateFreeSlots(inventoryType)
     end
 end
 
+function ZO_QuickslotManager:UpdateFreeSlots()
+
+    local numUsedSlots, numSlots = PLAYER_INVENTORY:GetNumSlots(INVENTORY_BACKPACK)
+	local numItems = #self.list.data
+	local freeSlotsShown = numItems or 0
+	local freeSlotText = ""
+		
+    if(numUsedSlots < numSlots) then
+        freeSlotText = zo_strformat(SI_INVENTORY_BACKPACK_REMAINING_SPACES, numUsedSlots, numSlots)
+    else
+        freeSlotText = zo_strformat(SI_INVENTORY_BACKPACK_COMPLETELY_FULL, numUsedSlots, numSlots)
+    end
+	local newFreeSlotText = zo_strformat("<<1>> <<2>>(<<3>>)", freeSlotText, colorDrkOrange, freeSlotsShown)
+	self.freeSlotsLabel:SetText(newFreeSlotText)
+end
+
 local function OnApplySort(self, inventoryType)
 	self:UpdateFreeSlots(inventoryType)
 end
@@ -286,12 +326,17 @@ function FilterIt.Refresh()
 		PLAYER_INVENTORY:UpdateList(INVENTORY_GUILD_BANK)
 		PLAYER_INVENTORY:UpdateFreeSlots(INVENTORY_GUILD_BANK)
 		FilterIt.SetFilterActivation(ZO_GuildBankTabs.m_object.m_currentSubMenuBar)
+	elseif QUICKSLOT_WINDOW.quickSlotState then
+        QUICKSLOT_WINDOW:UpdateList()
+        QUICKSLOT_WINDOW:UpdateFreeSlots()
+		FilterIt.SetFilterActivation(ZO_QuickSlotTabs.m_object.m_currentSubMenuBar)
+	else
+        -- covers store, trade, mail, exc...
+        --PLAYER_INVENTORY:RefreshAllInventorySlots(INVENTORY_BACKPACK)
+        PLAYER_INVENTORY:UpdateList(INVENTORY_BACKPACK)
+        PLAYER_INVENTORY:UpdateFreeSlots(INVENTORY_BACKPACK)
+        FilterIt.SetFilterActivation(ZO_PlayerInventoryTabs.m_object.m_currentSubMenuBar)
 	end
-	-- covers store, trade, mail, exc...
-	--PLAYER_INVENTORY:RefreshAllInventorySlots(INVENTORY_BACKPACK)
-	PLAYER_INVENTORY:UpdateList(INVENTORY_BACKPACK)
-	PLAYER_INVENTORY:UpdateFreeSlots(INVENTORY_BACKPACK)
-	FilterIt.SetFilterActivation(ZO_PlayerInventoryTabs.m_object.m_currentSubMenuBar)
 end
 
 local function AutoMarkForResearch(_iBagId, _iSlotId)

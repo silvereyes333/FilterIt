@@ -38,7 +38,8 @@ local function HandleLevelFilterSwitch(_fCallback, _cComboBox, _sName, _tItem, _
 			_cComboBox.m_FilterIt_CurrentFilter = "FilterIt_Filter_Level"
 			_cComboBox.m_FilterIt_CurrentFilterFunc = _fCallback
 			_cComboBox.m_FilterIt_FilterType = newfilterType
-			PLAYER_INVENTORY.inventories[iInventoryType].m_FilterIt_CurrentLevelFilter = _tItem
+			local currentInventory = FilterIt.GetInventoryInstance(iInventoryType)
+			currentInventory.m_FilterIt_CurrentLevelFilter = _tItem
 			_cComboBox.m_currentSelectedItem = _tItem
 		end
 	end
@@ -62,6 +63,9 @@ end
 local function ZeroLevelFilterItemCounts(_iInventory)
 	local ParentMenuTabsBar = FilterIt.GetParentMenuTabsForInv(_iInventory)
 	local ddLevelFilters = ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
+	if not ddLevelFilters then
+		return
+	end
 	
 	for k,v in ipairs(ddLevelFilters.m_comboBox.m_LevelFilters) do
 		local sName = v.Name
@@ -73,6 +77,9 @@ end
 
 --[[ we need to also check against the .additionalFilter if it exists because an item could have, say a save for enchanting mark, but if were at the vendor the filter should not be enabled because those items do not pass the additional vendor filter.--]]
 local function PassesAdditionalFilter(_tSlot, _iInventory)
+	if _iInventory == FILTERIT_QUICKSLOT then
+		return true
+	end
 	local additionalFilter = PLAYER_INVENTORY.inventories[_iInventory].additionalFilter
 	if (type(additionalFilter) == "function") then
 		return additionalFilter(_tSlot)
@@ -82,6 +89,17 @@ end
 
 -- Must be done to check that the game itself shows this item under the current inventories current tab button filter.
 local function PassesGameTabFilter(_tSlot, iOwningBtnFilterType, _iInventory)
+
+	if(_iInventory == FILTERIT_QUICKSLOT) then
+	    -- All collectibles pass all quickslot tabs *except* the main one
+		if(_tSlot.collectibleId) then
+			return iOwningBtnFilterType ~= ITEMFILTERTYPE_QUICKSLOT 
+		-- If not a collectible, make sure the All tab filters slottable items
+		else
+			iOwningBtnFilterType = ITEMFILTERTYPE_QUICKSLOT
+		end
+	end
+
 	if(iOwningBtnFilterType ~= ITEMFILTERTYPE_JUNK and _tSlot.isJunk) then return false end
 	if(iOwningBtnFilterType == ITEMFILTERTYPE_JUNK and not _tSlot.isJunk) then return false end
 	if(iOwningBtnFilterType == ITEMFILTERTYPE_JUNK and _tSlot.isJunk) then return true end
@@ -98,6 +116,9 @@ end
 
 -- Check against current Level Filter
 local function PassesLevelFilter(_tSlot, _iInventory)
+	if _iInventory == FILTERIT_QUICKSLOT then
+		return true
+	end
 	local ddLevelFilter = GetCurrentLevelFilter(_iInventory)
 	local sCurrentFilter = ddLevelFilter.m_comboBox.m_FilterIt_CurrentFilter
 	local fCurrentFilterFunc = ddLevelFilter.m_comboBox.m_FilterIt_CurrentFilterFunc
@@ -135,18 +156,41 @@ local function CheckSubMenuButtons(_tSlot, _tMenuBarButtons, _iOwningBtnFilterTy
 	return bAreAllButtonsEnabled
 end
 
+local function GetQuickSlots()
+	local menuBar = ZO_QuickSlotTabs.m_object.m_currentSubMenuBar
+	local filterType = menuBar.m_object.OwningBtnFilterType
+	local slots = {}
+	if filterType == ITEMFILTERTYPE_COLLECTIBLE or filterType == ITEMFILTERTYPE_ALL then
+		for k, data in pairs(COLLECTIONS_INVENTORY_SINGLETON:GetQuickslotData()) do
+			table.insert(slots, data)
+		end
+	end
+	if filterType == ITEMFILTERTYPE_QUICKSLOT or filterType == ITEMFILTERTYPE_ALL then
+		for k, data in pairs(PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots) do
+			table.insert(slots, data)
+		end
+	end
+	return slots
+end
 	
 	
 -- loop through the slots calling a check for all subMenuBar filters on each slot. If a match is found the btn is enabled. Ends early if all buttons get enabled.
 local function CheckInventorySlots(_iInventory, _tMenuBarButtons, _iOwningBtnFilterType)
-	for k, tSlot in pairs(PLAYER_INVENTORY.inventories[_iInventory].slots) do
+	local slots
+	if _iInventory == FILTERIT_QUICKSLOT then
+		slots = GetQuickSlots()
+	else
+		slots = PLAYER_INVENTORY.inventories[_iInventory].slots
+	end
+
+	for k, tSlot in pairs(slots) do
 		local bPassedGameTabFilter 		= PassesGameTabFilter(tSlot, _iOwningBtnFilterType, _iInventory)
 		local bPassedAdditionalFilters 	= PassesAdditionalFilter(tSlot, _iInventory)
 		local bPassedLevelFilter 		= PassesLevelFilter(tSlot, _iInventory)
 		local ParentMenuTabsBar 		= FilterIt.GetParentMenuTabsForInv(_iInventory)
 		local ddLevelFilters 			= ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
 		
-		if bPassedGameTabFilter and bPassedAdditionalFilters then
+		if ddLevelFilters and bPassedGameTabFilter and bPassedAdditionalFilters then
 			for k,v in ipairs(ddLevelFilters.m_comboBox.m_LevelFilters) do
 				local sName = v.Name
 				if sName ~= "None" then
@@ -229,21 +273,32 @@ function FilterIt.SetFilterActivation(_FilterItSubMenuBar)
 	-- Gather filter Information
 	local sMenuBarFilterName 	= _FilterItSubMenuBar.currentFilter[iInventory].filterName
 	local iMenuBarFilterType 	= _FilterItSubMenuBar.currentFilter[iInventory].filterType
-	local ParentMenuTabsBar 	= FilterIt.GetParentMenuTabsForInv(iInventory)
-	local ddLevelFilters 		= ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
-	local iLevelFilterType 		= ddLevelFilters.m_comboBox.m_FilterIt_FilterType
-	local currentLevelFilterName = ddLevelFilters.m_comboBox.m_FilterIt_CurrentFilter
-	local currentLevelFilterFunc = ddLevelFilters.m_comboBox.m_FilterIt_CurrentFilterFunc
-	
 	local bIsFilterMenuBarRegistered = LFI:IsFilterRegistered(sMenuBarFilterName, iMenuBarFilterType)
-	local bIsLevelFilterRegistered = LFI:IsFilterRegistered(currentLevelFilterName, iLevelFilterType)
 	
 	-- Unregister any custom subFilter filters or else all btns will be disabled except the currently selected button because all other items will be filtered out by the additional filter.
 	if bIsFilterMenuBarRegistered then
 		FilterIt.UnregisterFilterBarFilter(_FilterItSubMenuBar)
 	end
-	if bIsLevelFilterRegistered then
-		FilterIt.UnregisterFilter(currentLevelFilterName, iLevelFilterType)
+	
+	local ParentMenuTabsBar 	= FilterIt.GetParentMenuTabsForInv(iInventory)
+	
+	local ddLevelFilters 		= ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
+	
+	local bIsLevelFilterRegistered = false
+	local iLevelFilterType
+	local currentLevelFilterName
+	local currentLevelFilterFunc
+	if ddLevelFilters then
+		
+		iLevelFilterType 		= ddLevelFilters.m_comboBox.m_FilterIt_FilterType
+		currentLevelFilterName = ddLevelFilters.m_comboBox.m_FilterIt_CurrentFilter
+		currentLevelFilterFunc = ddLevelFilters.m_comboBox.m_FilterIt_CurrentFilterFunc
+		
+		bIsLevelFilterRegistered = LFI:IsFilterRegistered(currentLevelFilterName, iLevelFilterType)
+		
+		if bIsLevelFilterRegistered then
+			FilterIt.UnregisterFilter(currentLevelFilterName, iLevelFilterType)
+		end
 	end
 	-- Now loop through inventory slots checking to see if there is an item under each filter
 	-- and gather new level filter item counts
@@ -271,6 +326,7 @@ function FilterIt.SetFilterActivation(_FilterItSubMenuBar)
 		end
 	
 		FilterIt.RegisterFilter(currentLevelFilterName, newfilterType, currentLevelFilterFunc)
+		
 		ddLevelFilters.m_comboBox.m_FilterIt_FilterType = newfilterType
 	end
 end
@@ -284,6 +340,34 @@ local function OnUpdateList(self, iInventoryType)
 	return false
 end
 ZO_PreHook(PLAYER_INVENTORY, "UpdateList", OnUpdateList)
+
+-- I hate overriding this whole method, but ZOS didn't provide a "post" hook
+function ZO_QuickslotManager:UpdateList()
+    local scrollData = ZO_ScrollList_GetDataList(self.list)
+    ZO_ScrollList_Clear(self.list)
+    ZO_ScrollList_ResetToTop(self.list)
+
+    local currentFilterType = self.currentFilter.descriptor
+    if currentFilterType == ITEMFILTERTYPE_ALL then
+        self:AppendItemData(scrollData)
+        self:AppendCollectiblesData(scrollData)
+    elseif currentFilterType == ITEMFILTERTYPE_QUICKSLOT then
+        self:AppendItemData(scrollData)
+    elseif currentFilterType == ITEMFILTERTYPE_COLLECTIBLE then
+        self:AppendCollectiblesData(scrollData)
+    end
+
+    self:ApplySort()
+    self:ValidateOrClearAllQuickslots()
+    self.sortHeadersControl:SetHidden(#scrollData == 0)
+    
+    -- Start custom code
+	local curBar = ZO_QuickSlotList.FilterItCurrentSubFilterBar
+	if curBar then 
+		FilterIt.SetFilterActivation(curBar)
+	end
+	-- End custom code
+end
 
 --[[
 --function ZO_InventoryManager:OnInventoryItemAdded(inventoryType, bagId, slotIndex, newSlotData)

@@ -2,7 +2,7 @@
 ## APIVersion: 100015
 ## OptionalDependsOn: LibAddonMenu-2.0
 ## SavedVariables: FilterItSavedVars
-## Version: 4.0
+## Version: 4.1
 ## Author: |cEFEBBECirconian|r & |c99CCEFsilvereyes|r
 ## Description: Creates filters for different inventory/window item lists.
 
@@ -43,6 +43,7 @@ Common\FilterIt_FilterFuncs.lua
 Common\FilterIt_Shared.lua
 Common\FilterIt_Utility.lua
 InvMenuBars\FilterIt_InventoryFilters.lua
+InvMenuBars\FilterIt_QuickSlotFilters.lua
 InvMenuBars\FilterIt_FilterMenu.xml
 InvMenuBars\FilterIt_MenuBars.lua
 Layout\FilterIt_InvLayout.lua

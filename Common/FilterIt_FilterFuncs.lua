@@ -7,13 +7,16 @@ local LN4R = LibStub:GetLibrary("LibNeed4Research")
 -- Valid Slot Check --
 ---------------------------
 local function IsSlotOccupied(_tSlot)
-    return ((_tSlot ~= nil) and (_tSlot.stackCount > 0))
+    if (_tSlot == nil) then return false end
+    if (_tSlot.collectibleId) then return true end
+    return (_tSlot.stackCount > 0)
 end
 
 ---------------------------
 -- Level Filters --
 ---------------------------
 local function FilterByLevels(_tSlot, _bChampionPoints, _iMinLevel, _iMaxLevel)
+	if _tSlot.collectibleId then return _iMinLevel == 0 end
 	if not IsSlotOccupied(_tSlot) then return false end
 	local iBagId 		= _tSlot.bagId
 	local iSlotId 		= _tSlot.slotIndex
@@ -537,6 +540,7 @@ function FilterIt.HasGameItemFilterType(_tSlot, _iItemFilterType)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
 	local tFilterData = _tSlot.filterData
+	if not tFilterData then return true end
 	for k,v in pairs(tFilterData) do
 		if v == _iItemFilterType then
 			return true
@@ -552,6 +556,7 @@ function FilterIt.FilterArmor(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
 	local tFilterData = _tSlot.filterData
+	if not tFilterData then return false end
 	for k,v in pairs(tFilterData) do
 		if v == ITEMFILTERTYPE_ARMOR then
 			return true
@@ -563,6 +568,7 @@ function FilterIt.FilterWeapons(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
 	local tFilterData = _tSlot.filterData
+	if not tFilterData then return false end
 	for k,v in pairs(tFilterData) do
 		if v == ITEMFILTERTYPE_WEAPONS then
 			return true
@@ -574,6 +580,7 @@ function FilterIt.FilterConsumables(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
 	local tFilterData = _tSlot.filterData
+	if not tFilterData then return false end
 	for k,v in pairs(tFilterData) do
 		if v == ITEMFILTERTYPE_CONSUMABLE then
 			return true
@@ -586,6 +593,7 @@ function FilterIt.FilterMaterials(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
 	local tFilterData = _tSlot.filterData
+	if not tFilterData then return false end
 	for k,v in pairs(tFilterData) do
 		if v == ITEMFILTERTYPE_CRAFTING then
 			return true
@@ -598,6 +606,7 @@ function FilterIt.FilterMisc(_tSlot)
 	if not IsSlotOccupied(_tSlot) then return false end
 	
 	local tFilterData = _tSlot.filterData
+	if not tFilterData then return false end
 	for k,v in pairs(tFilterData) do
 		if v == ITEMFILTERTYPE_MISCELLANEOUS then
 			return true
@@ -607,3 +616,46 @@ function FilterIt.FilterMisc(_tSlot)
 end
 
 
+---------------------------------
+-- Collection Filter Functions --
+---------------------------------
+
+function FilterIt.FilterCollectibleCostumes(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_COSTUME 
+end
+
+function FilterIt.FilterCollectibleCostumes(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_COSTUME 
+end
+
+function FilterIt.FilterCollectibleSkins(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_SKIN 
+end
+
+function FilterIt.FilterCollectiblePolymorphs(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_POLYMORPH 
+end
+
+function FilterIt.FilterCollectibleHats(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_HAT 
+end
+
+
+function FilterIt.FilterCollectibleMementos(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_TROPHY 
+end
+
+
+function FilterIt.FilterCollectibleAssistants(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_ASSISTANT 
+end
+
+
+function FilterIt.FilterCollectiblePersonalities(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_PERSONALITY 
+end
+
+
+function FilterIt.FilterCollectibleVanityPets(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_VANITY_PET 
+end

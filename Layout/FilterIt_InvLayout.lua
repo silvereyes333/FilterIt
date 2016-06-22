@@ -82,6 +82,22 @@ local function LayoutGuildBank()
 	FilterItBankDivider:SetAnchor(point0, relativeTo0, relativePoint0, offsetX0, offsetY0+5)
 end
 
+local function LayoutQuickSlots()
+
+	local isValidAnchor, point, relativeTo, relativePoint, offsetX, offsetY = ZO_QuickSlotSortBy:GetAnchor(0)
+	ZO_QuickSlotSortBy:ClearAnchors()
+	ZO_QuickSlotSortBy:SetAnchor(point, relativeTo, relativePoint, offsetX, offsetY+40)
+
+	local isValidAnchor0, point0, relativeTo0, relativePoint0, offsetX0, offsetY0 = QUICKSLOT_WINDOW.list:GetAnchor(0)
+	local isValidAnchor, point1, relativeTo1, relativePoint1, offsetX1, offsetY1 = QUICKSLOT_WINDOW.list:GetAnchor(1)
+	QUICKSLOT_WINDOW.list:ClearAnchors()
+	QUICKSLOT_WINDOW.list:SetAnchor(point0, relativeTo0, relativePoint0, offsetX0, offsetY0+40)
+	QUICKSLOT_WINDOW.list:SetAnchor(point1, relativeTo1, relativePoint1, offsetX1, offsetY1)
+
+	local FilterItQuickSlotDivider = CreateControlFromVirtual("FilterItQuickSlotDivider", ZO_QuickSlot, "ZO_InventoryFilterDivider")
+	FilterItQuickSlotDivider:SetAnchor(point0, relativeTo0, relativePoint0, offsetX0, offsetY0+5)
+end
+
 --[[
 function FilterIt.LayoutTradingHouse()
 	if FilterIt.loadedAddons["AwesomeGuildStore"] then return end
@@ -122,5 +138,6 @@ function FilterIt.SetLayouts()
 	LayoutBackpack()
 	LayoutBank()
 	LayoutGuildBank()
+	LayoutQuickSlots()
 end
 
