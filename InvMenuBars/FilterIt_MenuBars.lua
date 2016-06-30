@@ -200,9 +200,13 @@ end
 -----------------------------------------------------------------------------
 local function CreateButtons(_menuBar, _cButton, _tTabFilters)
 	-- Create all of the tabFilters, then use them to create/add a button to the menu --
+	local apiVersion = GetAPIVersion()
 	for j = 1, #_tTabFilters do
-		local myTab = CreateNewTabFilterData(_cButton, _tTabFilters[j], _menuBar)
-		local cButton = ZO_MenuBar_AddButton(_menuBar, myTab)
+        local tabFilter = _tTabFilters[j]
+        if not tabFilter.apiVersion or apiVersion >= tabFilter.apiVersion then
+            local myTab = CreateNewTabFilterData(_cButton, tabFilter, _menuBar)
+            local cButton = ZO_MenuBar_AddButton(_menuBar, myTab)
+        end
 	end
 	return tMyButtons
 end
@@ -233,8 +237,12 @@ local function CreateMenuBar(_cButton, _iInventory, _bHideLevelFilters)
 	-- the games menu bar is anchored on the right
 	--menuBar:SetAnchor(TOPLEFT, parentControl, BOTTOMLEFT, -20, 20)
 	local iLeftAnchor = -370
+	local apiVersion = GetAPIVersion()
 	if _bHideLevelFilters then
 		iLeftAnchor = iLeftAnchor - 40
+		if apiVersion >= 100016 then
+            iLeftAnchor = iLeftAnchor - 60
+		end
 	end
 	menuBar:SetAnchor(TOPLEFT, parentControl, BOTTOMRIGHT, iLeftAnchor, 20)
 	menuBar:SetHidden(true)

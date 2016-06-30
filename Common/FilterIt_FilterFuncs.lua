@@ -640,21 +640,41 @@ function FilterIt.FilterCollectibleHats(_tCollectible)
 	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_HAT 
 end
 
+function FilterIt.FilterCollectibleHair(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_HAIR 
+end
+
+function FilterIt.FilterCollectibleBeards(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_FACIAL_HAIR_HORNS 
+end
+
+function FilterIt.FilterCollectibleFacialAccessories(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_FACIAL_ACCESSORY 
+end
+
+function FilterIt.FilterCollectiblePiercings(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_PIERCING_JEWELRY 
+end
+
+function FilterIt.FilterCollectibleHeadMarkings(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_HEAD_MARKING 
+end
+
+function FilterIt.FilterCollectibleBodyMarkings(_tCollectible)
+	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_BODY_MARKING 
+end
 
 function FilterIt.FilterCollectibleMementos(_tCollectible)
 	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_TROPHY 
 end
 
-
 function FilterIt.FilterCollectibleAssistants(_tCollectible)
 	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_ASSISTANT 
 end
 
-
 function FilterIt.FilterCollectiblePersonalities(_tCollectible)
 	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_PERSONALITY 
 end
-
 
 function FilterIt.FilterCollectibleVanityPets(_tCollectible)
 	return _tCollectible.categoryType == COLLECTIBLE_CATEGORY_TYPE_VANITY_PET 

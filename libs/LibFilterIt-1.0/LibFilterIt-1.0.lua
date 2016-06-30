@@ -221,6 +221,40 @@ end
 SetLayoutAdditionalFilters()
 
 
+--*******************************************************--
+--***********   Scroll of Mara fix    *******************--
+--*******************************************************--
+function ZO_InventoryManager:AddInventoryItem(inventoryType, slotIndex)
+    local inventory = self.inventories[inventoryType]
+    local bagId = inventory.backingBag
+
+    local slot = SHARED_INVENTORY:GenerateSingleSlotData(bagId, slotIndex)
+    
+    -- Create replacement copy of slot data with MISC replaced with CONSUMABLE 
+    -- in item filter types
+    if slot and slot.specializedItemType == SPECIALIZED_ITEMTYPE_TROPHY_SCROLL then
+        local fixed = {}
+        for key,value in pairs(slot) do
+            if key == "filterData" then
+                fixed[key] = {}
+                for i,filterValue in ipairs(value) do
+                    if filterValue == ITEMFILTERTYPE_MISCELLANEOUS then
+                        fixed[key][i] = ITEMFILTERTYPE_CONSUMABLE
+                    else
+                        fixed[key][i] = filterValue
+                    end
+                end
+            else
+                fixed[key] = value
+            end
+        end
+        slot = fixed
+    end
+    
+    inventory.slots[slotIndex] = slot
+end	
+
+
 
 local OrigAlchemyDoesPassFilter = ZO_Alchemy_DoesAlchemyItemPassFilter
 function ZO_Alchemy_DoesAlchemyItemPassFilter(bagId, slotIndex, filterType)
@@ -387,7 +421,6 @@ function ZO_QuickslotManager:AppendCollectiblesData(scrollData)
 		end
     end
 end
-	
 	
 
 --*******************************************************--

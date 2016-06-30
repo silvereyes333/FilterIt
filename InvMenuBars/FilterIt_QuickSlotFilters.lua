@@ -45,69 +45,141 @@ FilterIt.quickSlotFilters[ITEMFILTERTYPE_COLLECTIBLE] = {
 		filterName	 	= "FilterIt_Filter_Collectible_Hats",
 		filterFunc 		= FilterIt.FilterCollectibleHats,
 	},
--- SKIN --
+-- HAIR --
 	[4] = {
+		disabled 		= "EsoUI/Art/icons/justice_stolen_wig_001.dds",
+		normal 			= "EsoUI/Art/icons/justice_stolen_wig_001.dds",
+		pressed 		= "EsoUI/Art/icons/justice_stolen_wig_001.dds",
+		highlight 		= "EsoUI/Art/icons/justice_stolen_wig_001.dds",
+		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE13,
+		descriptor		= 4,
+		filterName	 	= "FilterIt_Filter_Collectible_Hair",
+		filterFunc 		= FilterIt.FilterCollectibleHair,
+		apiVersion      = 100016,
+	},
+-- FACIAL HAIR / HORNS --
+	[5] = {
+		disabled 		= "EsoUI/Art/icons/quest_head_monster_011.dds",
+		normal 			= "EsoUI/Art/icons/quest_head_monster_011.dds",
+		pressed 		= "EsoUI/Art/icons/quest_head_monster_011.dds",
+		highlight 		= "EsoUI/Art/icons/quest_head_monster_011.dds",
+		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE14,
+		descriptor		= 5,
+		filterName	 	= "FilterIt_Filter_Collectible_Beards",
+		filterFunc 		= FilterIt.FilterCollectibleBeards,
+		apiVersion      = 100016,
+	},
+-- FACIAL ACCESSORY --
+	[6] = {
+		disabled 		= "EsoUI/Art/icons/justice_stolen_unique_champion_baldric.dds",
+		normal 			= "EsoUI/Art/icons/justice_stolen_unique_champion_baldric.dds",
+		pressed 		= "EsoUI/Art/icons/justice_stolen_unique_champion_baldric.dds",
+		highlight 		= "EsoUI/Art/icons/justice_stolen_unique_champion_baldric.dds",
+		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE15,
+		descriptor		= 6,
+		filterName	 	= "FilterIt_Filter_Collectible_Facial_Accessories",
+		filterFunc 		= FilterIt.FilterCollectibleFacialAccessories,
+		apiVersion      = 100016,
+	},
+-- PIERCINGS / JEWELRY --
+	[7] = {
+		disabled		= "EsoUI/Art/icons/quest_jewelry_008.dds",
+		normal 			= "EsoUI/Art/icons/quest_jewelry_008.dds",
+		pressed 		= "EsoUI/Art/icons/quest_jewelry_008.dds",
+		highlight	 	= "EsoUI/Art/icons/quest_jewelry_008.dds",
+		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE16,
+		descriptor		= 7,
+		filterName	 	= "FilterIt_Filter_Collectible_Piercings",
+		filterFunc 		= FilterIt.FilterCollectiblePiercings,
+		apiVersion      = 100016,
+	},
+-- HEAD MARKING --
+	[8] = {
+		disabled 		= "EsoUI/Art/icons/justice_stolen_mask_full_001.dds",
+		normal 			= "EsoUI/Art/icons/justice_stolen_mask_full_001.dds",
+		pressed 		= "EsoUI/Art/icons/justice_stolen_mask_full_001.dds",
+		highlight 		= "EsoUI/Art/icons/justice_stolen_mask_full_001.dds",
+		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE17,
+		descriptor		= 8,
+		filterName	 	= "FilterIt_Filter_Collectible_Head_Markings",
+		filterFunc 		= FilterIt.FilterCollectibleHeadMarkings,
+		apiVersion      = 100016,
+	},
+-- BODY MARKING --
+	[9] = {
+		disabled 		= "EsoUI/Art/icons/heraldrycrests_deco_02.dds",
+		normal 			= "EsoUI/Art/icons/heraldrycrests_deco_02.dds",
+		pressed 		= "EsoUI/Art/icons/heraldrycrests_deco_02.dds",
+		highlight 		= "EsoUI/Art/icons/heraldrycrests_deco_02.dds",
+		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE18,
+		descriptor		= 9,
+		filterName	 	= "FilterIt_Filter_Collectible_Body_Markings",
+		filterFunc 		= FilterIt.FilterCollectibleBodyMarkings,
+		apiVersion      = 100016,
+	},
+-- SKIN --
+	[10] = {
 		disabled		= "EsoUI/Art/icons/skin_mindshriven_01.dds",
 		normal 			= "EsoUI/Art/icons/skin_mindshriven_01.dds",
 		pressed 		= "EsoUI/Art/icons/skin_mindshriven_01.dds",
 		highlight	 	= "EsoUI/Art/icons/skin_mindshriven_01.dds",
 		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE11,
-		descriptor		= 4,
+		descriptor		= 10,
 		filterName	 	= "FilterIt_Filter_Collectible_Skins",
 		filterFunc 		= FilterIt.FilterCollectibleSkins,
 	},
 -- POLYMORPH --
-	[5] = {
+	[11] = {
 		disabled 		= "EsoUI/Art/icons/quest_head_monster_016.dds",
 		normal 			= "EsoUI/Art/icons/quest_head_monster_016.dds",
 		pressed 		= "EsoUI/Art/icons/quest_head_monster_016.dds",
 		highlight	 	= "EsoUI/Art/icons/quest_head_monster_016.dds",
 		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE12,
-		descriptor		= 5,
+		descriptor		= 11,
 		filterName	 	= "FilterIt_Filter_Collectible_Polymorphs",
 		filterFunc 		= FilterIt.FilterCollectiblePolymorphs,
 	},
 -- PERSONALITY --
-	[6] = {
+	[12] = {
 		disabled 		= "EsoUI/Art/icons/personality_assassin_01.dds",
 		normal 			= "EsoUI/Art/icons/personality_assassin_01.dds",
 		pressed 		= "EsoUI/Art/icons/personality_assassin_01.dds",
 		highlight 		= "EsoUI/Art/icons/personality_assassin_01.dds",
 		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE9 ,
-		descriptor		= 6,
+		descriptor		= 12,
 		filterName	 	= "FilterIt_Filter_Collectible_Personalities",
 		filterFunc 		= FilterIt.FilterCollectiblePersonalities,
 	},
 -- ASSISTANT --
-	[7] = {
+	[13] = {
 		disabled 		= "EsoUI/Art/icons/justice_stolen_pouch_003.dds",
 		normal 			= "EsoUI/Art/icons/justice_stolen_pouch_003.dds",
 		pressed 		= "EsoUI/Art/icons/justice_stolen_pouch_003.dds",
 		highlight 		= "EsoUI/Art/icons/justice_stolen_pouch_003.dds",
 		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE8,
-		descriptor		= 7,
+		descriptor		= 13,
 		filterName	 	= "FilterIt_Filter_Collectible_Assistants",
 		filterFunc 		= FilterIt.FilterCollectibleAssistants,
 	},
 -- MEMENTO --
-	[8] = {
+	[14] = {
 		disabled 		= "EsoUI/Art/icons/quest_gemstone_tear_0002.dds",
 		normal 			= "EsoUI/Art/icons/quest_gemstone_tear_0002.dds",
 		pressed 		= "EsoUI/Art/icons/quest_gemstone_tear_0002.dds",
 		highlight 		= "EsoUI/Art/icons/quest_gemstone_tear_0002.dds",
 		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE5 ,
-		descriptor		= 8,
+		descriptor		= 14,
 		filterName	 	= "FilterIt_Filter_Collectible_Mementos",
 		filterFunc 		= FilterIt.FilterCollectibleMementos,
 	},
 -- VANITY PET --
-	[9] = {
+	[15] = {
 		disabled 		= "EsoUI/Art/icons/pet_013.dds",
 		normal 			= "EsoUI/Art/icons/pet_013.dds",
 		pressed 		= "EsoUI/Art/icons/pet_013.dds",
 		highlight 		= "EsoUI/Art/icons/pet_013.dds",
 		tooltipText 	= SI_COLLECTIBLECATEGORYTYPE3 ,
-		descriptor		= 9,
+		descriptor		= 15,
 		filterName	 	= "FilterIt_Filter_Collectible_Vanity_Pets",
 		filterFunc 		= FilterIt.FilterCollectibleVanityPets,
 	},
