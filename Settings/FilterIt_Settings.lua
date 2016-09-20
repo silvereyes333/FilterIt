@@ -54,6 +54,7 @@ function FilterIt.CreateSettingsMenu()
 		displayName = "|cFF0000 Circonians |c00FFFF FilterIt",
 		author = "|cEFEBBECirconian|r - Updated By: |c99CCEFsilvereyes|r",
 		version = string.format("%.1f", FilterIt.RealVersion),
+		website = "http://www.esoui.com/downloads/info871-CirconiansFilterIt.html",
 		slashCommand = "/filterit",
 		registerForRefresh = true,
 		registerForDefaults = true,
