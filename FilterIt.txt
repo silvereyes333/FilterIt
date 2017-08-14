@@ -1,8 +1,8 @@
 ## Title: FilterIt
-## APIVersion: 100016 100017
+## APIVersion: 100020
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0
 ## SavedVariables: FilterItSavedVars
-## Version: 5.1
+## Version: 5.2
 ## Author: |cEFEBBECirconian|r & |c99CCEFsilvereyes|r
 ## Description: Creates filters for different inventory/window item lists.
 

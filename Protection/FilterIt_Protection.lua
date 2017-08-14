@@ -432,47 +432,40 @@ ZO_PreHook("ZO_InventorySlot_OnReceiveDrag", OnReceiveDrag)
 --*******************************************************--
 --****************   Provisioning   *********************--
 --*******************************************************--
+local function LoadFilteredIngredientsByBag(tFilteredIngredients, inventoryId, bagId)
+    
+	local next = next
+    
+    -- Bank doesn't populate until its open, if its not populated
+	-- force population then grab the bank slots again
+	local tSlots = PLAYER_INVENTORY.inventories[inventoryId].slots[bagId]
+	if next(tSlots) == nil then
+		PLAYER_INVENTORY:RefreshAllInventorySlots(inventoryId)
+		tSlots = PLAYER_INVENTORY.inventories[inventoryId].slots[bagId]
+	end
+	
+	for k,tSlot in pairs(tSlots) do
+		local lLink = GetItemLink(tSlot.bagId, tSlot.slotIndex)
+		local CraftingSkillType = GetItemLinkCraftingSkillType(lLink)
+		if CraftingSkillType == CRAFTING_TYPE_PROVISIONING then
+			local itemFilterId = GetItemSaveForMark(tSlot)
+			if itemFilterId and itemFilterId ~= FILTERIT_PROVISIONING then
+				local itemID = select(4,ZO_LinkHandler_ParseLink(lLink))
+				table.insert(tFilteredIngredients, itemID)
+			end
+		end
+	end
+end
 ------------------------------------------------
 -- GetFilteredIngredients  --
 -- Grab a table of all filtered ingredients from --
 -- the backpack & bank, save & return their item IDs --
 ------------------------------------------------
 local function GetFilteredIngredients()
-	local tBackpackSlots = PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots
-	local tBankSlots = PLAYER_INVENTORY.inventories[INVENTORY_BANK].slots
 	local tFilteredIngredients = {}
-	
-	-- Bank doesn't populate until its open, if its not populated
-	-- force population then grab the bank slots again
-	local next = next
-	if next(tBankSlots) == nil then
-		PLAYER_INVENTORY:RefreshAllInventorySlots(INVENTORY_BANK)
-		tBankSlots = PLAYER_INVENTORY.inventories[INVENTORY_BANK].slots
-	end
-	
-	for k,tSlot in pairs(tBackpackSlots) do
-		local lLink = GetItemLink(tSlot.bagId, tSlot.slotIndex)
-		local CraftingSkillType = GetItemLinkCraftingSkillType(lLink)
-		if CraftingSkillType == CRAFTING_TYPE_PROVISIONING then
-			local itemFilterId = GetItemSaveForMark(tSlot)
-			if itemFilterId and itemFilterId ~= FILTERIT_PROVISIONING then
-				local itemID = select(4,ZO_LinkHandler_ParseLink(lLink))
-				table.insert(tFilteredIngredients, itemID)
-			end
-		end
-	end
-	
-	for k,tSlot in pairs(tBankSlots) do
-		local lLink = GetItemLink(tSlot.bagId, tSlot.slotIndex)
-		local CraftingSkillType = GetItemLinkCraftingSkillType(lLink)
-		if CraftingSkillType == CRAFTING_TYPE_PROVISIONING then
-			local itemFilterId = GetItemSaveForMark(tSlot)
-			if itemFilterId and itemFilterId ~= FILTERIT_PROVISIONING then
-				local itemID = select(4,ZO_LinkHandler_ParseLink(lLink))
-				table.insert(tFilteredIngredients, itemID)
-			end
-		end
-	end
+	LoadFilteredIngredientsByBag(tFilteredIngredients, INVENTORY_BACKPACK, BAG_BACKPACK)
+	LoadFilteredIngredientsByBag(tFilteredIngredients, INVENTORY_BANK, BAG_BANK)
+	LoadFilteredIngredientsByBag(tFilteredIngredients, INVENTORY_BANK, BAG_SUBSCRIBER_BANK)   
 	return tFilteredIngredients
 end
 -------------------------------------------------
@@ -546,7 +539,7 @@ function SellAllJunk()
 	
 	local tItemSellTable = {}
 	
-	local tSlots = PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots
+	local tSlots = PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots[BAG_BACKPACK]
     local iBagSize = GetBagSize(BAG_BACKPACK)
 	local bShouldPlayAlert = false
 	
@@ -670,7 +663,7 @@ function DestroyAllJunk()
 	
 	local tItemDestroyTable = {}
 	
-	local tSlots = PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots
+	local tSlots = PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots[BAG_BACKPACK]
     local iBagSize = GetBagSize(iBagId)
 	local bShouldPlayAlert = false
 	

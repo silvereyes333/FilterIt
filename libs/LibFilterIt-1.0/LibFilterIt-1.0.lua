@@ -189,11 +189,11 @@ end
 
 local function RunFilterFromBagIdSlotId(_iBagId, _iSlotId, _FilterItFilter)
 	local iInventoryId = PLAYER_INVENTORY.bagToInventoryType[_iBagId]
-	local tSlot = PLAYER_INVENTORY.inventories[iInventoryId].slots[_iSlotId]
+	local tSlot = PLAYER_INVENTORY.inventories[iInventoryId].slots[_iBagId][_iSlotId]
 	-- banks don't populate until you open them, check & refresh if necessary
 	if not tSlot then
 		PLAYER_INVENTORY:RefreshAllInventorySlots(iInventoryId)
-		tSlot = PLAYER_INVENTORY.inventories[iInventoryId].slots[_iSlotId]
+		tSlot = PLAYER_INVENTORY.inventories[iInventoryId].slots[_iBagId][_iSlotId]
 	end
 	return CheckFilters(tSlot, _FilterItFilter)
 end
@@ -224,9 +224,12 @@ SetLayoutAdditionalFilters()
 --*******************************************************--
 --***********   Scroll of Mara fix    *******************--
 --*******************************************************--
-function ZO_InventoryManager:AddInventoryItem(inventoryType, slotIndex)
+function ZO_InventoryManager:AddInventoryItem(inventoryType, slotIndex, bagId)
+    
     local inventory = self.inventories[inventoryType]
-    local bagId = inventory.backingBag
+
+    -- Default bagId to backingBags[1] for addon backwards-compatibility
+    bagId = bagId or inventory.backingBags[1]
 
     local slot = SHARED_INVENTORY:GenerateSingleSlotData(bagId, slotIndex)
     
@@ -251,7 +254,7 @@ function ZO_InventoryManager:AddInventoryItem(inventoryType, slotIndex)
         slot = fixed
     end
     
-    inventory.slots[slotIndex] = slot
+    inventory.slots[bagId][slotIndex] = slot
 end	
 
 

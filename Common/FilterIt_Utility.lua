@@ -344,7 +344,7 @@ local function AutoMarkForResearch(_iBagId, _iSlotId)
 	
 	-- This needs to be called from: EVENT_INVENTORY_SINGLE_SLOT_UPDATE so we know if it is a new item or not. This means we can not grab the slotData from the SHARED_INVENTORY, because it doesn't update fast enough after an EVENT_INVENTORY_SINGLE_SLOT_UPDATE event.
 	local iInventory 	= PLAYER_INVENTORY.bagToInventoryType[_iBagId]
-	local tSlot 		= PLAYER_INVENTORY.inventories[iInventory].slots[_iSlotId]
+	local tSlot 		= PLAYER_INVENTORY.inventories[iInventory].slots[_iBagId][_iSlotId]
 	if not tSlot then return end
 	
 	if tSlot.itemType == ITEMTYPE_RECIPE then
@@ -379,7 +379,7 @@ local function AutoMarkOrnateItem(_iBagId, _iSlotId)
 	
 	if tIsTraitOrnate[iTraitType] then 
 		local iInventory 	= PLAYER_INVENTORY.bagToInventoryType[_iBagId]
-		local tSlot 		= PLAYER_INVENTORY.inventories[iInventory].slots[_iSlotId]
+		local tSlot 		= PLAYER_INVENTORY.inventories[iInventory].slots[_iBagId][_iSlotId]
 		if not tSlot then return end
 		
 		local slotControl = tSlot.slotControl
@@ -402,7 +402,7 @@ local function AutoMarkIntricateItem(_iBagId, _iSlotId)
 	
 	if tIsTraitIntricate[iTraitType] then 
 		local iInventory 	= PLAYER_INVENTORY.bagToInventoryType[_iBagId]
-		local tSlot 		= PLAYER_INVENTORY.inventories[iInventory].slots[_iSlotId]
+		local tSlot 		= PLAYER_INVENTORY.inventories[iInventory].slots[_iBagId][_iSlotId]
 		if not tSlot then return end
 		
 		local slotControl = tSlot.slotControl
@@ -438,7 +438,7 @@ function FilterIt.ForceAutoMarks()
 		return 
 	end
 	
-	local tSlots = PLAYER_INVENTORY.inventories[iInventory].slots
+	local tSlots = PLAYER_INVENTORY.inventories[iInventory].slots[iBagId]
     local bagSize = GetBagSize(iBagId)
 	local iResearchMarkCount 	= 0
 	local iIntricateMarkCount 	= 0

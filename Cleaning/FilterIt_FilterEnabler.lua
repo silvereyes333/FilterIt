@@ -166,7 +166,7 @@ local function GetQuickSlots()
 		end
 	end
 	if filterType == ITEMFILTERTYPE_QUICKSLOT or filterType == ITEMFILTERTYPE_ALL then
-		for k, data in pairs(PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots) do
+		for k, data in pairs(PLAYER_INVENTORY.inventories[INVENTORY_BACKPACK].slots[BAG_BACKPACK]) do
 			table.insert(slots, data)
 		end
 	end
@@ -176,36 +176,38 @@ end
 	
 -- loop through the slots calling a check for all subMenuBar filters on each slot. If a match is found the btn is enabled. Ends early if all buttons get enabled.
 local function CheckInventorySlots(_iInventory, _tMenuBarButtons, _iOwningBtnFilterType)
-	local slots
+	local slotsByBag
 	if _iInventory == FILTERIT_QUICKSLOT then
-		slots = GetQuickSlots()
+		slotsByBag = { GetQuickSlots() }
 	else
-		slots = PLAYER_INVENTORY.inventories[_iInventory].slots
+		slotsByBag = PLAYER_INVENTORY.inventories[_iInventory].slots
 	end
 
-	for k, tSlot in pairs(slots) do
-		local bPassedGameTabFilter 		= PassesGameTabFilter(tSlot, _iOwningBtnFilterType, _iInventory)
-		local bPassedAdditionalFilters 	= PassesAdditionalFilter(tSlot, _iInventory)
-		local bPassedLevelFilter 		= PassesLevelFilter(tSlot, _iInventory)
-		local ParentMenuTabsBar 		= FilterIt.GetParentMenuTabsForInv(_iInventory)
-		local ddLevelFilters 			= ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
-		
-		if ddLevelFilters and bPassedGameTabFilter and bPassedAdditionalFilters then
-			for k,v in ipairs(ddLevelFilters.m_comboBox.m_LevelFilters) do
-				local sName = v.Name
-				if sName ~= "None" then
-					if v.Callback(tSlot) then
-						v.NumItems = v.NumItems + 1
-					end
-				end
-			end
-		end
-		
-		if bPassedGameTabFilter and bPassedAdditionalFilters and bPassedLevelFilter then
-			local bCheckDone = CheckSubMenuButtons(tSlot, _tMenuBarButtons, _iOwningBtnFilterType)
-			--if bCheckDone then return end
-		end
-	end
+    for _, slots in pairs(slotsByBag) do
+        for k, tSlot in pairs(slots) do
+            local bPassedGameTabFilter 		= PassesGameTabFilter(tSlot, _iOwningBtnFilterType, _iInventory)
+            local bPassedAdditionalFilters 	= PassesAdditionalFilter(tSlot, _iInventory)
+            local bPassedLevelFilter 		= PassesLevelFilter(tSlot, _iInventory)
+            local ParentMenuTabsBar 		= FilterIt.GetParentMenuTabsForInv(_iInventory)
+            local ddLevelFilters 			= ParentMenuTabsBar:GetNamedChild("ddLevelFilters")
+            
+            if ddLevelFilters and bPassedGameTabFilter and bPassedAdditionalFilters then
+                for k,v in ipairs(ddLevelFilters.m_comboBox.m_LevelFilters) do
+                    local sName = v.Name
+                    if sName ~= "None" then
+                        if v.Callback(tSlot) then
+                            v.NumItems = v.NumItems + 1
+                        end
+                    end
+                end
+            end
+            
+            if bPassedGameTabFilter and bPassedAdditionalFilters and bPassedLevelFilter then
+                local bCheckDone = CheckSubMenuButtons(tSlot, _tMenuBarButtons, _iOwningBtnFilterType)
+                --if bCheckDone then return end
+            end
+        end
+    end
 end
 
 

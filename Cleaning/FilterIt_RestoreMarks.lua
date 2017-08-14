@@ -24,16 +24,17 @@ local tWornSlots = {
 ------------------------------------------------------------------
 local function RestoreInventoryMarks(_iInventoryId)
 	PLAYER_INVENTORY:RefreshAllInventorySlots(_iInventoryId)
-	local tSlots = PLAYER_INVENTORY.inventories[_iInventoryId].slots
-	
-	for slotIndex, tSlot in pairs(tSlots) do
-		local sUniqueId = Id64ToString(GetItemUniqueId(tSlot.bagId, tSlot.slotIndex))
-		local filterTypeFromId = FilterIt.AccountSavedVariables.FilteredItems[sUniqueId]
-		
-		if filterTypeFromId then
-			tSlot.FilterIt_CurrentFilter = filterTypeFromId
-		end
-	end
+    
+    for bagId, tSlots in pairs(PLAYER_INVENTORY.inventories[_iInventoryId].slots) do        
+        for slotIndex, tSlot in pairs(tSlots) do
+            local sUniqueId = Id64ToString(GetItemUniqueId(bagId, tSlot.slotIndex))
+            local filterTypeFromId = FilterIt.AccountSavedVariables.FilteredItems[sUniqueId]
+            
+            if filterTypeFromId then
+                tSlot.FilterIt_CurrentFilter = filterTypeFromId
+            end
+        end
+    end
 end
 local function RestoreWornMarks()
 	local wornCache = SHARED_INVENTORY:GetOrCreateBagCache(BAG_WORN)
