@@ -2,7 +2,7 @@
 ## APIVersion: 100020
 ## OptionalDependsOn: LibStub LibAddonMenu-2.0
 ## SavedVariables: FilterItSavedVars
-## Version: 5.2
+## Version: 5.2.1
 ## Author: |cEFEBBECirconian|r & |c99CCEFsilvereyes|r
 ## Description: Creates filters for different inventory/window item lists.
 
