@@ -188,13 +188,7 @@ local function CheckFilters(_tSlot, _FilterType)
 end
 
 local function RunFilterFromBagIdSlotId(_iBagId, _iSlotId, _FilterItFilter)
-	local iInventoryId = PLAYER_INVENTORY.bagToInventoryType[_iBagId]
-	local tSlot = PLAYER_INVENTORY.inventories[iInventoryId].slots[_iBagId][_iSlotId]
-	-- banks don't populate until you open them, check & refresh if necessary
-	if not tSlot then
-		PLAYER_INVENTORY:RefreshAllInventorySlots(iInventoryId)
-		tSlot = PLAYER_INVENTORY.inventories[iInventoryId].slots[_iBagId][_iSlotId]
-	end
+    local tSlot = SHARED_INVENTORY:GenerateSingleSlotData(_iBagId, _iSlotId)
 	return CheckFilters(tSlot, _FilterItFilter)
 end
 
